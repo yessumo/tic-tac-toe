@@ -1,50 +1,67 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const cells = document.querySelectorAll('[data-cell]');
-    const board = document.querySelector('.board');
-    const messageDiv = document.getElementById('message');
-    let currentPlayer = 'X';
-    let gameActive = true;
+const cells = document.querySelectorAll('.cell');
+const resetButton = document.getElementById('reset-button');
+const message = document.getElementById('message');
 
-    function handleClick(event) {
-        const cell = event.target;
-        if (cell.textContent === '' && gameActive) {
-            cell.textContent = currentPlayer;
-            if (checkWin()) {
-                messageDiv.textContent = `${currentPlayer} wins!`;
-                gameActive = false;
-                return;
-            }
-            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+let currentPlayer = 'X';
+let board = ['', '', '', '', '', '', '', '', ''];
+let gameActive = true;
+
+const winningCombinations = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+];
+
+function checkWinner() {
+    for (let combo of winningCombinations) {
+        const [a, b, c] = combo;
+        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+            return board[a];
         }
     }
+    return null;
+}
 
-    function checkWin() {
-        const winningCombination = [
-            [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
-            [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
-            [0, 4, 8], [2, 4, 6]              // Diagonals
-        ];
+function checkDraw() {
+    return board.every(cell => cell);
+}
 
-        return winningCombination.some(combination => {
-            const [a, b, c] = combination;
-            return cells[a].textContent && cells[a].textContent === cells[b].textContent && cells[a].textContent === cells[c].textContent;
-        });
+function handleClick(event) {
+    const cellIndex = event.target.dataset.index;
+
+    if (!gameActive || board[cellIndex]) return;
+
+    board[cellIndex] = currentPlayer;
+    event.target.textContent = currentPlayer;
+
+    const winner = checkWinner();
+    if (winner) {
+        message.textContent = `${winner} wins!`;
+        gameActive = false;
+        return;
     }
 
-    function resetGame() {
-        cells.forEach(cell => cell.textContent = '');
-        currentPlayer = 'X';
-        gameActive = true;
-        messageDiv.textContent = '';
+    if (checkDraw()) {
+        message.textContent = "It's a draw!";
+        gameActive = false;
+        return;
     }
 
-    cells.forEach(cell => {
-        cell.addEventListener('click', handleClick);
-    });
+    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+}
 
-    // Add a reset button to the board
-    const resetButton = document.createElement('button');
-    resetButton.textContent = 'Reset Game';
-    resetButton.addEventListener('click', resetGame);
-    board.appendChild(resetButton);
-});
+function resetGame() {
+    board = ['', '', '', '', '', '', '', '', ''];
+    cells.forEach(cell => cell.textContent = '');
+    message.textContent = '';
+    currentPlayer = 'X';
+    gameActive = true;
+}
+
+cells.forEach(cell => cell.addEventListener('click', handleClick));
+resetButton.addEventListener('click', resetGame);

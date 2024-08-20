@@ -1,37 +1,70 @@
 body {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
+    justify-content: center;
     height: 100vh;
     margin: 0;
-    font-family: Arial, sans-serif;
+    font-family: Impact, sans-serif;
     background-color: #f0f0f0;
 }
 
 h1 {
     text-align: center;
     margin-bottom: 20px;
+    font-size: 2em; /* Larger font size for title */
+    color: #333; /* Title color */
 }
 
-.board {
+/* Container for the game grid */
+#game-container {
     display: grid;
     grid-template-columns: repeat(3, 100px);
     grid-template-rows: repeat(3, 100px);
-    gap: 10px;
+    gap: 5px;
+    margin-bottom: 20px; /* Adds space below the grid */
 }
 
+/* Style for each cell in the grid */
 .cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 100px;
     height: 100px;
     background-color: white;
-    border: 2px solid black;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 24px;
+    border: 1px solid #ddd;
+    font-size: 2em; /* Size of X and O */
     cursor: pointer;
 }
 
+/* Style for cell hover effect */
+.cell:hover {
+    background-color: #f0f0f0;
+}
+
+/* Style for the Reset button */
+#reset-button {
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+#reset-button:hover {
+    background-color: #0056b3;
+}
+
+#reset-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(38, 143, 255, 0.5);
+}
+
+/* Style for the message */
 #message {
     text-align: center;
     margin-top: 20px;
